@@ -1,0 +1,122 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Placement Prep Tracker</title><style>
+:root{--bg:#f6f7fb;--cd:#fff;--tx:#1b1f2a;--mu:#6b7280;--bd:#e5e7eb;--pr:#4f46e5;--apt:#3b82f6;--cod:#16a34a;--eng:#f97316;--dev:#8b5cf6;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1220;--cd:#191d2e;--tx:#e8eaf2;--mu:#9aa1b5;--bd:#2a2f45;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1220;--cd:#191d2e;--tx:#e8eaf2;--mu:#9aa1b5;--bd:#2a2f45;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+#wrap{max-width:960px;margin:auto;padding:16px 14px 110px}
+h1{font-size:22px;margin:0 0 4px}h2{font-size:17px;margin:0 0 10px}
+.card{background:var(--cd);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.stat{background:var(--cd);border:1px solid var(--bd);border-radius:14px;padding:10px 12px}.stat b{font-size:22px;display:block}.stat span{color:var(--mu);font-size:12px}
+.bar{height:8px;background:var(--bd);border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;border-radius:99px;transition:width .5s}
+button,select,input,textarea{font:inherit;color:var(--tx);background:var(--cd);border:1px solid var(--bd);border-radius:10px;padding:8px 10px}
+button{cursor:pointer}button.p{background:var(--pr);color:#fff;border-color:var(--pr)}button.x{border:0;background:none;color:var(--mu);padding:2px 8px}
+textarea{width:100%;box-sizing:border-box;min-height:70px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row input[type=text]{flex:1;min-width:140px}
+.tk{display:flex;align-items:center;gap:8px;flex:1;padding:5px 0}.dn{text-decoration:line-through;color:var(--mu)}
+.tr{display:flex;align-items:center;border-bottom:1px solid var(--bd)}.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.chip{display:inline-block;padding:2px 9px;margin:2px;border-radius:99px;border:1px solid var(--bd);font-size:12px;color:var(--mu)}.chip.on{background:var(--cod);color:#fff;border-color:var(--cod)}
+.heat{display:flex;flex-wrap:wrap;gap:4px}.heat i{width:18px;height:18px;border-radius:4px;border:1px solid var(--bd)}
+details{border-bottom:1px solid var(--bd);padding:6px 0}summary{cursor:pointer;font-weight:600}
+.mu{color:var(--mu);font-size:13px}.tabs{overflow-x:auto}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--cd);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5;overflow-x:auto}
+nav button{flex:1;min-width:62px;border:0;border-radius:0;background:none;font-size:11px;padding:8px 2px}nav button.on{color:var(--pr);font-weight:700}
+#fab{position:fixed;right:14px;bottom:calc(70px + env(safe-area-inset-bottom,0px));z-index:6;border-radius:99px;background:var(--pr);color:#fff;border-color:var(--pr);padding:12px 16px;box-shadow:0 4px 14px #0003}
+#chat{display:none;position:fixed;right:10px;left:10px;bottom:calc(120px + env(safe-area-inset-bottom,0px));max-width:420px;margin-left:auto;height:min(520px,65vh);background:var(--cd);border:1px solid var(--bd);border-radius:16px;z-index:7;flex-direction:column;box-shadow:0 8px 30px #0004}
+#chat.open{display:flex}#msgs{flex:1;overflow-y:auto;padding:10px}
+.m{padding:8px 11px;border-radius:12px;margin:6px 0;max-width:90%;white-space:normal}.m.user{background:var(--pr);color:#fff;margin-left:auto}.m.assistant{background:var(--bg);border:1px solid var(--bd)}
+@media(min-width:800px){nav{top:0;right:auto;width:170px;flex-direction:column;border-top:0;border-right:1px solid var(--bd);padding-top:env(safe-area-inset-top,0px)}nav button{flex:none;text-align:left;font-size:14px;padding:12px 16px}#wrap{margin-left:190px;margin-right:auto}#fab{bottom:20px}#chat{bottom:70px}}
+</style></head><body><div id="wrap"><div id="app"></div></div><nav id="nav"></nav><button id="fab" onclick="toggleChat()">💬 Mentor</button>
+<div id="chat"><div class="row" style="padding:10px;border-bottom:1px solid var(--bd)"><b style="flex:1">Placement Mentor</b><button class="x" onclick="toggleChat()">✕</button></div>
+<div id="msgs"></div><div class="row" style="padding:6px 10px"><button onclick="ask('Explain a topic I am weak at, in simple steps.')">Explain a topic</button><button onclick="ask('Give me 5 practice questions for today with answers hidden until I reply.')">5 questions</button><button onclick="ask('Start a mock interview. Ask one question at a time and give feedback.')">Mock interview</button><button onclick="ask('What should I study today?')">Study today?</button><button onclick="ask('Review my resume. Ask me to paste my points first.')">Review resume</button></div>
+<div class="row" style="padding:8px 10px;border-top:1px solid var(--bd)"><input type="text" id="ci" placeholder="Ask your mentor…" onkeydown="if(event.key==='Enter')sendC()"><button class="p" onclick="sendC()">Send</button></div></div>
+<script>
+const SEC={apt:{n:"Aptitude",c:"var(--apt)",ph:"Topic · accuracy % (e.g. Percentages · 70%)",t:["Percentages","Profit & Loss","Time & Work","Time-Speed-Distance","Ratio & Proportion","Probability","Permutations & Combinations","Number Series","Logical Reasoning","Seating Arrangement","Blood Relations","Data Interpretation"]},
+cod:{n:"Coding",c:"var(--cod)",ph:"Problem title · platform link",t:["Arrays","Strings","Hashing","Two Pointers","Sliding Window","Recursion","Sorting & Searching","Linked List","Stack & Queue","Trees","Graphs","Dynamic Programming","SQL Basics"]},
+eng:{n:"English",c:"var(--eng)",ph:"New word or speaking-practice note",t:["Grammar","Vocabulary","Reading Comprehension","Email Writing","Spoken English","Group Discussion","HR Answers","Self-Introduction"]},
+dev:{n:"Development",c:"var(--dev)",ph:"Project · tech stack · GitHub link",t:["Projects","GitHub","Portfolio","Resume","LinkedIn","Python/Java/Web Basics","Databases","APIs","OS","DBMS","Computer Networks","OOPs"]}};
+const K=Object.keys(SEC),$=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>\"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));
+let S=null,view="today",busy=0,smp=null,pomo={left:1500,run:0,sec:"cod",h:null};
+try{S=JSON.parse(localStorage.getItem("ppt")||"null")}catch(e){}
+const save=()=>{try{localStorage.setItem("ppt",JSON.stringify(S))}catch(e){}};
+const pct=a=>a.length?Math.round(a.filter(t=>t.done).length*100/a.length):0;
+const today=()=>Math.max(1,Math.floor((Date.now()-new Date(S.start+"T00:00:00"))/864e5)+1);
+const dt=d=>S.tasks.filter(t=>t.d===d),active=d=>dt(d).some(t=>t.done);
+function streak(){let n=0,d=Math.min(today(),S.days);if(!active(d))d--;while(d>=1&&active(d)){n++;d--}return n}
+function gen(days){const out=[];let id=1;for(let d=1;d<=days;d++)K.forEach(k=>{const t=SEC[k].t,i=Math.min(t.length-1,Math.floor((d-1)*t.length/days));out.push({id:id++,d,k,topic:t[i],text:(d%7===0?"Revise & test: ":"Study & practice: ")+t[i],done:0})});return out}
+function begin(){const days=Math.max(7,Math.min(180,+$("#sd").value||60));S={name:$("#sn").value||"Student",type:$("#st").value,start:$("#ss").value,days,tasks:gen(days),logs:[],mocks:[],mins:{apt:0,cod:0,eng:0,dev:0},chat:[],review:""};save();R()}
+function setup(){$("#nav").innerHTML="";$("#app").innerHTML=`<div class="card"><h1>Placement Prep Tracker</h1><p class="mu">Set your goal and get a day-by-day plan across Aptitude, Coding, English and Development.</p><div class="row" style="flex-direction:column;align-items:stretch"><input type="text" id="sn" placeholder="Your name"><select id="st"><option>Service companies</option><option>Product companies</option><option>Both</option></select><label class="mu">Start date</label><input type="date" id="ss" value="${new Date().toISOString().slice(0,10)}"><label class="mu">Days to prepare (30 / 60 / 90 or custom)</label><input type="number" id="sd" value="60" min="7" max="180"><button class="p" onclick="begin()">Create my plan</button></div></div>`}
+const bar=(p,c)=>`<div class="bar"><i style="width:${p}%;background:${c}"></i></div>`;
+function trow(t){return`<div class="tr"><span class="dot" style="background:${SEC[t.k].c}"></span><label class="tk"><input type="checkbox" ${t.done?"checked":""} onchange="tog(${t.id})"><span class="${t.done?"dn":""}">${esc(t.text)}</span></label><button class="x" onclick="del(${t.id})">×</button></div>`}
+function tog(id){const t=S.tasks.find(x=>x.id===id);t.done=t.done?0:1;save();R()}
+function del(id){S.tasks=S.tasks.filter(x=>x.id!==id);save();R()}
+function addT(){const v=$("#nt").value.trim();if(!v)return;S.tasks.push({id:Date.now(),d:Math.min(today(),S.days),k:$("#ns").value,topic:"",text:v,done:0});save();R()}
+function resched(){const t=Math.min(today(),S.days),p=S.tasks.filter(x=>x.d<t&&!x.done),rem=Math.max(1,S.days-t+1);p.forEach((x,i)=>x.d=t+Math.floor(i*rem/p.length));save();R()}
+function pomoTxt(){const m=Math.floor(pomo.left/60),s=pomo.left%60;return(m<10?"0":"")+m+":"+(s<10?"0":"")+s}
+function pomoGo(){if(pomo.run){clearInterval(pomo.h);pomo.run=0}else{pomo.run=1;pomo.h=setInterval(()=>{pomo.left--;if(pomo.left<=0){clearInterval(pomo.h);pomo.run=0;pomo.left=1500;S.mins[pomo.sec]+=25;save();R();return}const e=$("#pt");if(e)e.textContent=pomoTxt()},1000)}R()}
+function pomoReset(){clearInterval(pomo.h);pomo.run=0;pomo.left=1500;R()}
+function overall(){return pct(S.tasks)}
+function head(){const t=today(),fin=t>S.days;return`<h1>Hi ${esc(S.name)} 👋</h1><div class="grid" style="margin:10px 0"><div class="stat"><b>${fin?"Done":"Day "+t+"/"+S.days}</b><span>${fin?"Plan complete":Math.max(0,S.days-t)+" days left"}</span></div><div class="stat"><b>${overall()}%</b><span>Overall complete</span></div><div class="stat"><b>🔥 ${streak()}</b><span>Day streak</span></div><div class="stat"><b>${Math.round(Object.values(S.mins).reduce((a,b)=>a+b,0)/6)/10}h</b><span>Focused study</span></div></div>`}
+function vToday(){const d=Math.min(today(),S.days),miss=S.tasks.filter(x=>x.d<d&&!x.done).length;
+return head()+`<div class="card"><h2>Today’s tasks · Day ${d}</h2>${K.map(k=>{const a=dt(d).filter(t=>t.k===k);return a.length?`<div class="mu" style="margin-top:8px;color:${SEC[k].c}"><b>${SEC[k].n}</b></div>`+a.map(trow).join(""):""}).join("")||'<p class="mu">No tasks today. Add one below.</p>'}
+<div class="row" style="margin-top:10px"><select id="ns">${K.map(k=>`<option value="${k}">${SEC[k].n}</option>`).join("")}</select><input type="text" id="nt" placeholder="Add a task for today" onkeydown="if(event.key==='Enter')addT()"><button class="p" onclick="addT()">Add</button></div>
+${miss?`<p class="mu">${miss} missed task(s). <button onclick="resched()">Redistribute across remaining days</button></p>`:""}</div>
+<div class="card"><h2>Pomodoro · 25 min</h2><div class="row"><b id="pt" style="font-size:28px">${pomoTxt()}</b><select onchange="pomo.sec=this.value">${K.map(k=>`<option value="${k}" ${pomo.sec===k?"selected":""}>${SEC[k].n}</option>`).join("")}</select><button class="p" onclick="pomoGo()">${pomo.run?"Pause":"Start"}</button><button onclick="pomoReset()">Reset</button></div><p class="mu">Completed sessions are logged to the chosen section.</p></div>
+<div class="card"><h2>Section progress</h2>${K.map(k=>{const p=pct(S.tasks.filter(t=>t.k===k));return`<div style="margin:8px 0"><div class="row"><b style="flex:1">${SEC[k].n}</b><span class="mu">${p}%</span></div>${bar(p,SEC[k].c)}</div>`}).join("")}</div>`}
+function vPlan(){const t=today();let h=`<h1>Full plan</h1><p class="mu">Edit, delete or tick any task. Missed ones can be redistributed from Today.</p><div class="card">`;
+for(let d=1;d<=S.days;d++){const a=dt(d);h+=`<details ${d===t?"open":""}><summary>Day ${d} <span class="mu">· ${pct(a)}%${d===t?" · today":""}</span></summary>${a.map(trow).join("")}</details>`}return h+"</div>"}
+function vSec(k){const c=SEC[k],ts=S.tasks.filter(t=>t.k===k),lg=S.logs.filter(l=>l.k===k),up=ts.filter(t=>!t.done).slice(0,5);
+return`<h1 style="color:${c.c}">${c.n}</h1><div class="card"><div class="row"><b style="flex:1">${pct(ts)}% complete</b><span class="mu">${Math.round(S.mins[k]/6)/10}h studied</span></div>${bar(pct(ts),c.c)}<div style="margin-top:10px">${c.t.map(t=>{const a=ts.filter(x=>x.topic===t);return`<span class="chip ${a.length&&a.every(x=>x.done)?"on":""}">${esc(t)}</span>`}).join("")}</div></div>
+<div class="card"><h2>Next up</h2>${up.map(trow).join("")||'<p class="mu">All caught up.</p>'}</div>
+<div class="card"><h2>${k==="cod"?"Problem log":k==="eng"?"Words, speaking and answers":k==="dev"?"Projects and resume":"Practice log"}</h2><div class="row"><input type="text" id="lg" placeholder="${c.ph}"><select id="ls"><option>Todo</option><option>Done</option><option>Revise</option></select><button class="p" onclick="addLog('${k}')">Add</button></div>
+${lg.map(l=>`<div class="tr"><span class="tk">${esc(l.text)}</span><select onchange="stLog(${l.id},this.value)">${["Todo","Done","Revise"].map(s=>`<option ${l.s===s?"selected":""}>${s}</option>`).join("")}</select><button class="x" onclick="dLog(${l.id})">×</button></div>`).join("")||'<p class="mu">Nothing logged yet.</p>'}
+${lg.some(l=>l.s==="Revise")?`<p class="mu"><b>Revision queue:</b> ${lg.filter(l=>l.s==="Revise").map(l=>esc(l.text)).join(" · ")}</p>`:""}</div>
+${k==="eng"?`<div class="card"><h2>My self-introduction and HR answers</h2><textarea id="si" oninput="S.si=this.value;save()" placeholder="Write and save your answers here">${esc(S.si||"")}</textarea></div>`:""}
+${k==="dev"?`<div class="card"><h2>Resume checklist</h2>${["Contact details and LinkedIn","2–3 projects with impact","Skills section","GitHub link","One page, no typos"].map((x,i)=>`<label class="tk"><input type="checkbox" ${(S.rc||[])[i]?"checked":""} onchange="S.rc=S.rc||[];S.rc[${i}]=this.checked;save()">${x}</label>`).join("")}</div>`:""}`}
+function addLog(k){const v=$("#lg").value.trim();if(!v)return;S.logs.unshift({id:Date.now(),k,text:v,s:$("#ls").value});save();R()}
+function stLog(id,v){S.logs.find(l=>l.id===id).s=v;save();R()}
+function dLog(id){S.logs=S.logs.filter(l=>l.id!==id);save();R()}
+function vStats(){const mx=Math.max(1,...Object.values(S.mins));
+return`<h1>Stats</h1><div class="card"><h2>Hours per section</h2>${K.map(k=>`<div style="margin:8px 0"><div class="row"><span style="flex:1">${SEC[k].n}</span><span class="mu">${Math.round(S.mins[k]/6)/10}h</span></div>${bar(S.mins[k]*100/mx,SEC[k].c)}</div>`).join("")}</div>
+<div class="card"><h2>Completion heatmap</h2><div class="heat">${Array.from({length:S.days},(_,i)=>{const p=pct(dt(i+1));return`<i title="Day ${i+1}: ${p}%" style="background:color-mix(in srgb,var(--cod) ${p}%,transparent)"></i>`}).join("")}</div></div>
+<div class="card"><h2>Mock tests</h2><div class="row"><select id="ms">${K.map(k=>`<option value="${k}">${SEC[k].n}</option>`).join("")}</select><input type="number" id="mc" placeholder="Score %" style="width:90px" min="0" max="100"><input type="text" id="mw" placeholder="Weak areas"><button class="p" onclick="addMock()">Log</button></div>
+<div class="row" style="align-items:flex-end;height:70px;margin:10px 0">${S.mocks.slice(0,20).reverse().map(m=>`<div title="${m.s}%" style="width:16px;height:${Math.max(4,m.s*.7)}px;background:${SEC[m.k].c};border-radius:3px"></div>`).join("")}</div>
+${S.mocks.map(m=>`<div class="tr"><span class="tk">${m.date} · ${SEC[m.k].n} · <b>${m.s}%</b> <span class="mu">${esc(m.w||"")}</span></span></div>`).join("")||'<p class="mu">No mock tests yet.</p>'}</div>
+<div class="card"><h2>Weekly review</h2><p class="mu">What went well? What needs work?</p><textarea oninput="S.review=this.value;save()">${esc(S.review||"")}</textarea></div>
+<div class="card"><h2>Backup</h2><div class="row"><button onclick="exp()">Export JSON</button><button onclick="imp()">Import JSON</button><button onclick="if(confirm('Reset all data?')){S=null;try{localStorage.removeItem('ppt')}catch(e){}R()}">Reset</button><button onclick="th()">Light/Dark</button></div><textarea id="bk" placeholder="Export shows your data here. Paste data and press Import to restore."></textarea></div>`}
+function addMock(){const s=+$("#mc").value;if(isNaN(s)||$("#mc").value==="")return;S.mocks.unshift({date:new Date().toISOString().slice(0,10),k:$("#ms").value,s,w:$("#mw").value});save();R()}
+function exp(){$("#bk").value=JSON.stringify(S);$("#bk").select()}
+function imp(){try{const d=JSON.parse($("#bk").value);if(d&&d.tasks){S=d;save();R()}}catch(e){alert("Invalid data")}}
+function th(){const r=document.documentElement,d=getComputedStyle(r).colorScheme==="dark";r.setAttribute("data-theme",d?"light":"dark")}
+function R(){if(!S)return setup();const N=[["today","🏠","Today"],["plan","📅","Plan"],...K.map(k=>[k,{apt:"🧮",cod:"💻",eng:"🗣️",dev:"🛠️"}[k],SEC[k].n]),["topics","📋","Topics"],["stats","📊","Stats"]];
+$("#nav").innerHTML=N.map(n=>`<button class="${view===n[0]?"on":""}" onclick="view='${n[0]}';R()">${n[1]}<br>${n[2]}</button>`).join("");
+$("#app").innerHTML=view==="today"?vToday():view==="plan"?vPlan():view==="stats"?vStats():view==="topics"?vTopics():vSec(view);drawChat()}
+/* Topics checklist */
+const TOP={apt:{"Quantitative":["Number System","HCF & LCM","Percentages","Profit & Loss","Simple & Compound Interest","Ratio & Proportion","Averages","Mixtures & Alligations","Time & Work","Pipes & Cisterns","Time-Speed-Distance","Trains, Boats & Streams","Permutations & Combinations","Probability","Algebra Basics","Geometry & Mensuration","Clocks & Calendars"],"Logical Reasoning":["Number Series","Coding-Decoding","Blood Relations","Directions","Seating Arrangement","Syllogisms","Puzzles","Data Sufficiency","Venn Diagrams"],"Data Interpretation":["Tables","Bar & Line Charts","Pie Charts","Caselets"],"Verbal":["Reading Comprehension","Synonyms & Antonyms","Sentence Correction","Para Jumbles"]},
+cod:{"Foundations":["One main language (C / Java / Python)","Loops, conditions, functions","Time & space complexity","Recursion & Backtracking","Bit Manipulation"],"Data Structures":["Arrays","Strings","Hashing & Maps","Linked List","Stack","Queue","Heap / Priority Queue","Binary Trees","Binary Search Trees","Trie","Graphs"],"Algorithms":["Sorting","Binary Search","Two Pointers","Sliding Window","Prefix Sum","Greedy","Dynamic Programming","BFS & DFS","Shortest Path","Union Find"],"SQL":["SELECT, WHERE, GROUP BY","Joins","Subqueries","Window Functions"]},
+eng:{"Grammar":["Tenses","Subject-Verb Agreement","Articles & Prepositions","Active & Passive Voice","Direct & Indirect Speech"],"Vocabulary":["Daily word list","Idioms & Phrases","Synonyms & Antonyms"],"Writing":["Email Writing","Formal Letters","Resume Summary"],"Speaking":["Self-Introduction","Group Discussion","Just-a-Minute","Pronunciation & Fluency"],"Interview Answers":["Strengths & Weaknesses","Why should we hire you","Where do you see yourself in 5 years","Situational questions","Video / telephonic interview etiquette"]},
+dev:{"Core CS":["OS: processes, threads, scheduling","OS: deadlock & memory management","DBMS: ER model & normalization","DBMS: ACID, transactions, indexing","Networks: OSI & TCP/IP","Networks: HTTP, DNS","OOPs: 4 pillars","OOPs: SOLID basics"],"Web & Tools":["HTML, CSS, JavaScript","REST APIs","Git & GitHub","Databases (SQL and NoSQL)"],"Data & AI":["Python: NumPy & pandas","SQL for analytics","Statistics basics","Visualization (Power BI / Tableau)","Machine Learning basics","LLM APIs & prompting"],"Profile Building":["Resume (one page)","Portfolio website","LinkedIn profile","2-3 solid projects","Open-source contribution","Certifications"]}};
+function tc(key){S.cov=S.cov||{};S.cov[key]=!S.cov[key];save();R()}
+function vTopics(){const cv=S.cov||{};let all=0,dn=0;const cards=K.map(k=>{let a=0,d=0;const gs=Object.entries(TOP[k]).map(([g,it])=>{a+=it.length;const x=it.filter(i=>cv[k+"|"+g+"|"+i]).length;d+=x;return`<details open><summary>${esc(g)} <span class="mu">· ${x}/${it.length}</span></summary>${it.map(i=>{const key=k+"|"+g+"|"+i;return`<label class="tk"><input type="checkbox" data-k="${esc(key)}" ${cv[key]?"checked":""} onchange="tc(this.dataset.k)"><span class="${cv[key]?"dn":""}">${esc(i)}</span></label>`}).join("")}</details>`}).join("");all+=a;dn+=d;return`<div class="card"><h2 style="color:${SEC[k].c}">${SEC[k].n} <span class="mu">· ${d}/${a}</span></h2>${bar(a?Math.round(d*100/a):0,SEC[k].c)}${gs}</div>`}).join("");return`<h1>Topics to cover</h1><p class="mu">Your complete placement checklist. Tick each topic as you finish it.</p><div class="card"><b>${dn}/${all} topics covered</b>${bar(all?Math.round(dn*100/all):0,"var(--pr)")}</div>`+cards}
+/* AI mentor */
+function toggleChat(){$("#chat").classList.toggle("open");drawChat()}
+function md(s){return esc(s.replace(/```tasks[\s\S]*$/,"")).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/\n/g,"<br>")}
+function parseT(s){const m=s.match(/```tasks\s*([\s\S]*?)```/);return m?m[1].split("\n").map(l=>l.split("|")).filter(a=>a.length>1&&SEC[a[0].trim()]).map(a=>({k:a[0].trim(),text:a.slice(1).join("|").trim()})):[]}
+function drawChat(){if(!S)return;const e=$("#msgs");if(!e)return;e.innerHTML=(S.chat.length?"":`<p class="mu">Hi ${esc(S.name)}! I know your progress, weak areas and today’s tasks. Ask me anything.</p>`)+S.chat.map((m,i)=>`<div class="m ${m.r}">${md(m.c||"…")}${m.r==="assistant"&&parseT(m.c||"").length?`<br><button class="p" onclick="addAI(${i})">Add to my plan</button>`:""}</div>`).join("");e.scrollTop=e.scrollHeight}
+function addAI(i){const d=Math.min(today(),S.days);parseT(S.chat[i].c).forEach(t=>S.tasks.push({id:Date.now()+Math.random(),d,k:t.k,topic:"",text:t.text,done:0}));save();R()}
+function sendC(){const i=$("#ci");const v=i.value.trim();i.value="";ask(v)}
+async function getS(){if(!smp){try{smp=await claude.use("sample")}catch(e){smp=null}}return smp}
+function ctx(){const d=Math.min(today(),S.days),pr={};K.forEach(k=>pr[SEC[k].n]=pct(S.tasks.filter(t=>t.k===k))+"%");
+return JSON.stringify({name:S.name,target:S.type,day:d,totalDays:S.days,daysLeft:S.days-d,progress:pr,weakTopics:[...S.logs.filter(l=>l.s==="Revise").map(l=>SEC[l.k].n+": "+l.text),...S.mocks.slice(0,3).map(m=>m.w).filter(Boolean)],streak:streak(),topicsCovered:Object.values(S.cov||{}).filter(Boolean).length,recentMocks:S.mocks.slice(0,3).map(m=>({section:SEC[m.k].n,score:m.s})),pendingToday:dt(d).filter(t=>!t.done).map(t=>SEC[t.k].n+": "+t.text)})}
+const SYS="You are a friendly, expert placement mentor for Indian campus placements. Use the student’s progress data to give personalized, practical advice. Be concise, motivating, and honest about weak areas. Run mock interviews one question at a time. If you suggest tasks for the plan, end with a fenced block starting with ```tasks and lines of the form SECTION|task, where SECTION is one of apt, cod, eng, dev.";
+async function ask(q){if(!q||busy||!S)return;busy=1;$("#chat").classList.add("open");S.chat.push({r:"user",c:q});const m={r:"assistant",c:""};S.chat.push(m);drawChat();
+try{const sm=await getS();if(!sm)throw{message:"The mentor is only available when this page is opened in claude.ai."};
+const msgs=[];S.chat.slice(0,-2).slice(-12).forEach(x=>{if(!x.c)return;const l=msgs[msgs.length-1];if(l&&l.role===x.r)l.content+="\n"+x.c;else msgs.push({role:x.r,content:x.c})});
+while(msgs.length&&msgs[0].role!=="user")msgs.shift();const l=msgs[msgs.length-1];const last=SYS+"\n\nSTUDENT STATE (JSON):\n"+ctx()+"\n\nSTUDENT MESSAGE:\n"+q;
+if(l&&l.role==="user")l.content+="\n"+last;else msgs.push({role:"user",content:last});
+const r=await sm(msgs,{cache:false,onText:({text})=>{m.c=text;drawChat()}});m.c=r.text||m.c}
+catch(e){m.c=(e.text||"")+"\n⚠️ "+(e.message||"Something went wrong. Please try again.")}
+busy=0;S.chat=S.chat.slice(-40);save();drawChat()}
+R();
+</script></body></html>
